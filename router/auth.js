@@ -75,7 +75,7 @@ router.post('/login', async(req,res) => {
   try{
     let token;
   const { email , password  } = req.body;
-  console.lp
+  
   
   if (!email || !password) {
     return res.status(400).json({error:"Enter Properly"});
@@ -89,9 +89,7 @@ router.post('/login', async(req,res) => {
   const token = await userLogin.generateAuthToken();
   
   
-  console.log(token);
-  await userLogin.save();
-    
+  
     if(isMatch) {
   res.json({message: "Login Success"});
  
