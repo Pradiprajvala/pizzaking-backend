@@ -74,7 +74,8 @@ router.post('/register', async (req,res) => {
 router.post('/login', async(req,res) => {
   try{
     let token;
-  const { email , password } = req.body;
+  const { email , password  } = req.body;
+  console.lp
   
   if (!email || !password) {
     return res.status(400).json({error:"Enter Properly"});
@@ -86,7 +87,11 @@ router.post('/login', async(req,res) => {
   if(userLogin){
   const isMatch = await bcrypt.compare(password, userLogin.password);
   const token = await userLogin.generateAuthToken();
+  
+  
   console.log(token);
+  await userLogin.save();
+    
     if(isMatch) {
   res.json({message: "Login Success"});
  

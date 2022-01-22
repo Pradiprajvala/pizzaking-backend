@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('../db/connection');
+const DB = process.env.DATABASE;
 const userSchema = new mongoose.Schema({
     name: {
       type: String,
@@ -42,9 +43,10 @@ userSchema.pre('save', function(next) {
         if(err) return new Error('error in hashing password' ) ;
           this.password = hash;
           this.confirmPassword = hash;
-          next();
+          
         })
       }
+      next();
     });
     
     
@@ -53,17 +55,19 @@ userSchema.pre('save', function(next) {
   userSchema.methods.generateAuthToken = async function () {
     try {
      let token = jwt.sign({ _id : this._id}, process.env.SECRET_KEY);//token Generated here
-  // saving token                  // token => left side Schema's => Right side ubove lines token
-      this.tokens = this.tokens.concat({ token: token });
-    //  console.log(this.email);
-    //  console.log(this.tokens);
-    await this.save();
+  // saving token  // token => left side Schema's => Right side ubove lines token
+   // let tokens = []
+  
+     this.tokens = this.tokens.concat( { token: token} );     
+let res = await this.save();
+
+ console.log(res)
    
 
     return token;
-    } catch (err){
+    } catch (error){
       
-      console.log(err);
+      console.log(error);
     }
   }
     
